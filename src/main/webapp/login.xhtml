@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SIGED DREMEH - Ingreso</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <h:outputStylesheet library="css" name="siged.css"/>
+</h:head>
+<h:body>
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="card shadow login-card w-100">
+            <div class="card-body p-4">
+                <h1 class="h4 text-center mb-1">SIGED DREMEH</h1>
+                <p class="text-center text-muted mb-4">Gestion y seguimiento documental</p>
+
+                <h:messages globalOnly="true" errorClass="alert alert-danger d-block"
+                            layout="list" styleClass="mensajes"/>
+
+                <h:form id="frmLogin">
+                    <div class="mb-3">
+                        <h:outputLabel for="usuario" value="Usuario" styleClass="form-label"/>
+                        <h:inputText id="usuario" value="#{loginBean.usuario}" required="true"
+                                     requiredMessage="Ingrese su usuario"
+                                     styleClass="form-control #{component.valid ? '' : 'is-invalid'}"/>
+                        <h:message for="usuario" styleClass="invalid-feedback d-block"/>
+                    </div>
+                    <div class="mb-3">
+                        <h:outputLabel for="clave" value="Clave" styleClass="form-label"/>
+                        <h:inputSecret id="clave" value="#{loginBean.clave}" required="true"
+                                       requiredMessage="Ingrese su clave"
+                                       styleClass="form-control #{component.valid ? '' : 'is-invalid'}"/>
+                        <h:message for="clave" styleClass="invalid-feedback d-block"/>
+                    </div>
+                    <h:commandButton value="Ingresar" action="#{loginBean.iniciar}"
+                                     styleClass="btn btn-primary w-100"/>
+                </h:form>
+            </div>
+        </div>
+    </div>
+</h:body>
+</html>

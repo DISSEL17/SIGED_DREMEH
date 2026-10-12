@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<ui:composition template="/templates/plantilla.xhtml">
+    <ui:define name="titulo">Panel</ui:define>
+    <ui:define name="contenido">
+        <h1 class="h3 mb-1">Panel de control</h1>
+        <p class="text-muted">
+            Bienvenido, #{loginBean.actual.nombreEmpleado}. Total de expedientes: <strong>#{dashboardBean.total}</strong>
+        </p>
+
+        <div class="row g-3 mb-4">
+            <ui:repeat value="#{dashboardBean.tarjetas}" var="t">
+                <div class="col-6 col-md-4 col-lg">
+                    <div class="card card-indicador text-center shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="display-6">#{t.cantidad}</div>
+                            <span class="badge #{t.clase}">#{t.estado}</span>
+                        </div>
+                    </div>
+                </div>
+            </ui:repeat>
+        </div>
+
+        <h:link outcome="/documentos/lista" value="Ver documentos" styleClass="btn btn-primary me-2"/>
+        <h:link outcome="/documentos/registro" value="Registrar documento" styleClass="btn btn-outline-primary"
+                rendered="#{loginBean.puedeRegistrar}"/>
+    </ui:define>
+</ui:composition>
+</html>

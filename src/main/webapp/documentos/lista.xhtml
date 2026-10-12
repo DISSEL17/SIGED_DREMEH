@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<ui:composition template="/templates/plantilla.xhtml">
+    <ui:define name="titulo">Documentos</ui:define>
+    <ui:define name="contenido">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h3 mb-0">Documentos y expedientes</h1>
+            <h:link outcome="registro" value="Nuevo documento" styleClass="btn btn-primary"
+                    rendered="#{loginBean.puedeRegistrar}"/>
+        </div>
+
+        <!-- Filtros -->
+        <h:form id="frmFiltro" styleClass="card card-body mb-3">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-5">
+                    <h:outputLabel for="texto" value="Buscar (expediente, asunto o solicitante)" styleClass="form-label"/>
+                    <h:inputText id="texto" value="#{documentoBean.filtroTexto}" styleClass="form-control"/>
+                </div>
+                <div class="col-md-3">
+                    <h:outputLabel for="estado" value="Estado" styleClass="form-label"/>
+                    <h:selectOneMenu id="estado" value="#{documentoBean.filtroEstado}" styleClass="form-select">
+                        <f:selectItem itemLabel="Todos" itemValue=""/>
+                        <f:selectItems value="#{documentoBean.estados}"/>
+                    </h:selectOneMenu>
+                </div>
+                <div class="col-md-4 d-flex gap-2">
+                    <h:commandButton value="Buscar" action="#{documentoBean.buscar}" styleClass="btn btn-primary"/>
+                    <h:commandButton value="Limpiar" action="#{documentoBean.limpiar}"
+                                     styleClass="btn btn-outline-secondary"/>
+                </div>
+            </div>
+        </h:form>
+
+        <!-- Tabla de datos -->
+        <h:form id="frmTabla">
+            <div class="table-responsive">
+                <h:dataTable id="tablaDocs" value="#{documentoBean.lista}" var="d"
+                             styleClass="table table-striped table-hover align-middle tabla-siged"
+                             headerClass="table-dark" rendered="#{not empty documentoBean.lista}">
+                    <h:column>
+                        <f:facet name="header">Expediente</f:facet>
+                        <h:link outcome="trazabilidad" value="#{d.expediente}">
+                            <f:param name="id" value="#{d.id}"/>
+                        </h:link>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Fecha</f:facet>
+                        #{d.fechaTexto}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Tipo</f:facet>
+                        #{d.tipo}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Asunto</f:facet>
+                        #{d.asunto}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Solicitante</f:facet>
+                        #{d.solicitante}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Estado</f:facet>
+                        <span class="badge #{d.claseEstado}">#{d.estado}</span>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Acciones</f:facet>
+                        <h:link outcome="trazabilidad" value="Historial" styleClass="btn btn-sm btn-outline-secondary me-1">
+                            <f:param name="id" value="#{d.id}"/>
+                        </h:link>
+                        <h:link outcome="derivar" value="Derivar" styleClass="btn btn-sm btn-outline-primary"
+                                rendered="#{loginBean.puedeRegistrar and d.estado ne 'CERRADO'}">
+                            <f:param name="id" value="#{d.id}"/>
+                        </h:link>
+                    </h:column>
+                </h:dataTable>
+            </div>
+
+            <h:panelGroup rendered="#{empty documentoBean.lista}">
+                <div class="alert alert-info">No se encontraron documentos con los filtros indicados.</div>
+            </h:panelGroup>
+
+            <!-- Paginacion -->
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="text-muted">
+                    #{documentoBean.total} registro(s) - Pagina #{documentoBean.paginaVisible} de #{documentoBean.totalPaginas}
+                </span>
+                <div class="btn-group">
+                    <h:commandButton value="Anterior" action="#{documentoBean.anterior}"
+                                     disabled="#{not documentoBean.hayAnterior}"
+                                     styleClass="btn btn-outline-primary"/>
+                    <h:commandButton value="Siguiente" action="#{documentoBean.siguiente}"
+                                     disabled="#{not documentoBean.haySiguiente}"
+                                     styleClass="btn btn-outline-primary"/>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>

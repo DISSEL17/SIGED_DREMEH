@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<ui:composition template="/templates/plantilla.xhtml">
+    <ui:define name="titulo">Registrar documento</ui:define>
+    <ui:define name="contenido">
+        <h1 class="h3 mb-3">Registrar documento</h1>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h:form id="frmRegistro">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <h:outputLabel for="tipo" value="Tipo de documento" styleClass="form-label"/>
+                            <h:selectOneMenu id="tipo" value="#{documentoBean.nuevo.tipo}" required="true"
+                                             requiredMessage="Seleccione el tipo"
+                                             styleClass="form-select #{component.valid ? '' : 'is-invalid'}">
+                                <f:selectItem itemLabel="Seleccione..." itemValue="" noSelectionOption="true"/>
+                                <f:selectItems value="#{documentoBean.tipos}"/>
+                            </h:selectOneMenu>
+                            <h:message for="tipo" styleClass="invalid-feedback d-block"/>
+                        </div>
+                        <div class="col-md-6">
+                            <h:outputLabel for="solicitante" value="Solicitante / remitente" styleClass="form-label"/>
+                            <h:inputText id="solicitante" value="#{documentoBean.nuevo.solicitante}" required="true"
+                                         requiredMessage="Ingrese el solicitante" maxlength="100"
+                                         styleClass="form-control #{component.valid ? '' : 'is-invalid'}"/>
+                            <h:message for="solicitante" styleClass="invalid-feedback d-block"/>
+                        </div>
+                        <div class="col-md-2">
+                            <h:outputLabel for="folios" value="Folios" styleClass="form-label"/>
+                            <h:inputText id="folios" value="#{documentoBean.nuevo.folios}" required="true"
+                                         requiredMessage="Indique los folios"
+                                         converterMessage="Debe ser un numero entero"
+                                         validatorMessage="Entre 1 y 500 folios"
+                                         styleClass="form-control #{component.valid ? '' : 'is-invalid'}">
+                                <f:validateLongRange minimum="1" maximum="500"/>
+                            </h:inputText>
+                            <h:message for="folios" styleClass="invalid-feedback d-block"/>
+                        </div>
+                        <div class="col-12">
+                            <h:outputLabel for="asunto" value="Asunto" styleClass="form-label"/>
+                            <h:inputTextarea id="asunto" value="#{documentoBean.nuevo.asunto}" rows="3" required="true"
+                                             requiredMessage="Ingrese el asunto"
+                                             validatorMessage="El asunto debe tener entre 5 y 200 caracteres"
+                                             styleClass="form-control #{component.valid ? '' : 'is-invalid'}">
+                                <f:validateLength minimum="5" maximum="200"/>
+                            </h:inputTextarea>
+                            <h:message for="asunto" styleClass="invalid-feedback d-block"/>
+                        </div>
+                    </div>
+                    <div class="mt-4 d-flex gap-2">
+                        <h:commandButton value="Registrar" action="#{documentoBean.registrar}" styleClass="btn btn-primary"/>
+                        <h:link outcome="lista" value="Cancelar" styleClass="btn btn-outline-secondary"/>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

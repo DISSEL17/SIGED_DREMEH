@@ -1,0 +1,8 @@
+/* Ajustes propios sobre Bootstrap 5 */
+body { background-color: #f4f6f9; }
+.navbar-siged { background-color: #1f3864; }
+.card-indicador .display-6 { font-weight: 700; }
+.tabla-siged th { white-space: nowrap; }
+.login-card { max-width: 420px; }
+.is-invalid { border-color: #dc3545; }
+ul.mensajes { list-style: none; padding-left: 0; margin: 0; }

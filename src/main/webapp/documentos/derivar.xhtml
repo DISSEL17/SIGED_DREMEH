@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<ui:composition template="/templates/plantilla.xhtml">
+    <ui:define name="metadata">
+        <f:viewParam name="id" value="#{derivacionBean.id}"/>
+        <f:viewAction action="#{derivacionBean.cargar}"/>
+    </ui:define>
+    <ui:define name="titulo">Derivar documento</ui:define>
+    <ui:define name="contenido">
+        <h1 class="h3 mb-3">Derivar documento</h1>
+
+        <h:panelGroup rendered="#{derivacionBean.documento != null}">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <h2 class="h5">#{derivacionBean.documento.expediente}
+                        <span class="badge #{derivacionBean.documento.claseEstado} ms-2">#{derivacionBean.documento.estado}</span>
+                    </h2>
+                    <p class="mb-1"><strong>Asunto:</strong> #{derivacionBean.documento.asunto}</p>
+                    <p class="mb-0"><strong>Solicitante:</strong> #{derivacionBean.documento.solicitante}</p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h:form id="frmDerivar">
+                        <div class="mb-3">
+                            <h:outputLabel for="responsable" value="Area y responsable" styleClass="form-label"/>
+                            <h:selectOneMenu id="responsable" value="#{derivacionBean.idEmpleado}" required="true"
+                                             requiredMessage="Seleccione un responsable"
+                                             styleClass="form-select #{component.valid ? '' : 'is-invalid'}">
+                                <f:selectItem itemLabel="Seleccione..." itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{derivacionBean.empleados}" var="e"
+                                               itemValue="#{e.id}" itemLabel="#{e.etiqueta}"/>
+                            </h:selectOneMenu>
+                            <h:message for="responsable" styleClass="invalid-feedback d-block"/>
+                        </div>
+                        <div class="mb-3">
+                            <h:outputLabel for="obs" value="Observacion" styleClass="form-label"/>
+                            <h:inputTextarea id="obs" value="#{derivacionBean.observacion}" rows="3" required="true"
+                                             requiredMessage="Escriba una observacion"
+                                             validatorMessage="Maximo 250 caracteres"
+                                             styleClass="form-control #{component.valid ? '' : 'is-invalid'}">
+                                <f:validateLength maximum="250"/>
+                            </h:inputTextarea>
+                            <h:message for="obs" styleClass="invalid-feedback d-block"/>
+                        </div>
+
+                        <!-- Boton que abre el modal de confirmacion -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#modalConfirmar">Derivar...</button>
+                        <h:link outcome="lista" value="Cancelar" styleClass="btn btn-outline-secondary ms-2"/>
+
+                        <!-- Modal de Bootstrap -->
+                        <div class="modal fade" id="modalConfirmar" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h2 class="modal-title h5" id="tituloModal">Confirmar derivacion</h2>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Se derivara el expediente <strong>#{derivacionBean.documento.expediente}</strong>
+                                        y quedara registrado en el historial. Esta accion no se puede deshacer.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Revisar</button>
+                                        <h:commandButton value="Confirmar derivacion" action="#{derivacionBean.derivar}"
+                                                         styleClass="btn btn-primary"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </h:panelGroup>
+
+        <h:link outcome="lista" value="Volver al listado" styleClass="btn btn-link mt-3"
+                rendered="#{derivacionBean.documento == null}"/>
+    </ui:define>
+</ui:composition>
+</html>
